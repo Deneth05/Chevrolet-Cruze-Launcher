@@ -31,7 +31,12 @@ jobs:
       - name: Build release APK
         run: |
           chmod +x gradlew
-          ./gradlew --no-daemon --stacktrace assembleRelease
+          # Retry: the Gradle download sometimes times out on GitHub runners
+          for i in 1 2 3; do
+            ./gradlew --no-daemon --stacktrace assembleRelease && break
+            if [ "$i" = 3 ]; then exit 1; fi
+            echo "Build attempt $i failed, retrying in 20s..."; sleep 20
+          done
           mkdir -p out
           cp app/build/outputs/apk/release/app-release.apk out/CruzeLauncher.apk
           ls -lh out
