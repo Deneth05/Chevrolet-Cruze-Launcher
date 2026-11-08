@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Cruze Launcher</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body class="theme-dark">
+<div id="bg" aria-hidden="true"><div class="glow g1"></div><div class="glow g2"></div></div>
+
+<div id="app">
+  <!-- ───────── Top bar ───────── -->
+  <header class="topbar">
+    <div class="tb-left">
+      <button class="icon-btn ghost" id="btnQuick" aria-label="Quick controls"><i data-icon="home"></i></button>
+      <div>
+        <div class="greet" id="greeting">Hello</div>
+        <div class="sub" id="date">—</div>
+      </div>
+    </div>
+    <div class="clock"><span id="time">--:--</span><span id="ampm"></span></div>
+    <div class="tb-right">
+      <div class="chips">
+        <span class="chip" id="chipLights" title="Headlights"><i data-icon="light"></i></span>
+        <span class="chip" id="chipObd" title="OBD-II"><i data-icon="obd"></i></span>
+        <span class="chip" id="chipGps" title="GPS"><i data-icon="gps"></i></span>
+        <span class="chip" id="chipNet" title="Internet"><i data-icon="wifi"></i></span>
+      </div>
+      <button class="icon-btn ghost" id="btnVoice" aria-label="Voice assistant"><i data-icon="mic"></i></button>
+      <button class="pill-btn" id="btnTheme"><i data-icon="moon"></i><span>NIGHT</span></button>
+    </div>
+  </header>
+
+  <!-- ───────── Main grid ───────── -->
+  <main class="grid">
+    <!-- Speed -->
+    <section class="card speed-card" id="speedCard">
+      <div class="card-head">
+        <span class="label">Speed</span>
+        <span class="tag" id="speedSrc">GPS</span>
+      </div>
+      <div class="gauge-wrap">
+        <svg class="gauge" id="gauge" viewBox="0 0 300 270" aria-hidden="true">
+          <g id="gTicks"></g>
+          <circle class="rpm-track" cx="150" cy="150" r="92" pathLength="100"/>
+          <circle class="rpm-val" id="rpmArc" cx="150" cy="150" r="92" pathLength="100"/>
+          <g id="gLabels"></g>
+          <line id="limitMark" class="limit-mark" x1="150" y1="18" x2="150" y2="34"/>
+        </svg>
+        <div class="gauge-center">
+          <div class="speed-num" id="speedNum">0</div>
+          <div class="speed-unit" id="speedUnit">KM/H</div>
+          <div class="rpm-txt"><b id="rpmTxt">0.0</b>k rpm</div>
+        </div>
+      </div>
+      <div class="stats">
+        <div><span class="label">Trip</span><b id="stTrip">0.0 km</b></div>
+        <div><span class="label">Drive</span><b id="stDrive">0 min</b></div>
+        <div><span class="label">Heading</span><b id="stHead">—</b></div>
+      </div>
+      <div class="stats small">
+        <div><span class="label">Avg</span><b id="stAvg">0</b></div>
+        <div><span class="label">Max</span><b id="stMax">0</b></div>
+        <div><span class="label">Limit</span><b id="stLimit">100</b></div>
+      </div>
+    </section>
+
+    <!-- Media -->
+    <section class="card media-card" id="mediaCard">
+      <button class="art" id="mArt" aria-label="Open music"><i data-icon="music"></i><img id="mArtImg" alt=""></button>
+      <div class="m-info">
+        <div class="label accent" id="mSource">Now playing</div>
+        <div class="m-title" id="mTitle">Nothing playing</div>
+        <div class="m-artist" id="mArtist">Tap play or open Radio</div>
+        <div class="m-prog"><div class="bar"><span id="mBar"></span></div>
+          <div class="m-times"><span id="mPos">0:00</span><span id="mDur">0:00</span></div></div>
+      </div>
+      <div class="m-ctrls">
+        <button class="icon-btn" id="mPrev" aria-label="Previous"><i data-icon="prev"></i></button>
+        <button class="play-btn" id="mPlay" aria-label="Play"><i data-icon="play"></i></button>
+        <button class="icon-btn" id="mNext" aria-label="Next"><i data-icon="next"></i></button>
+      </div>
+      <div class="eq" id="mEq"><span></span><span></span><span></span><span></span></div>
+    </section>
+
+    <!-- Weather -->
+    <section class="card weather-card" id="weatherCard">
+      <div class="card-head"><span class="label">Weather</span><span class="w-icon" id="wIcon"></span></div>
+      <div class="w-city"><i data-icon="pin"></i><span id="wCity">—</span></div>
+      <div class="w-temp"><span id="wNow">--°</span><span class="w-hl" id="wHL">--° / --°</span></div>
+      <div class="w-desc" id="wDesc">Loading…</div>
+      <div class="w-days" id="wDays"></div>
+    </section>
+
+    <!-- Live car -->
+    <section class="car-stage" id="carStage">
+      <div class="brand-wm" aria-hidden="true">CRUZE</div>
+      <div class="streaks" id="streaks" aria-hidden="true"></div>
+      <svg id="car" viewBox="-45 0 1100 470" aria-label="Chevrolet Cruze HR52S">
+        <defs>
+          <linearGradient id="gBodyShade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fff" stop-opacity=".38"/>
+            <stop offset=".28" stop-color="#fff" stop-opacity=".08"/>
+            <stop offset=".55" stop-color="#000" stop-opacity="0"/>
+            <stop offset="1" stop-color="#000" stop-opacity=".5"/>
+          </linearGradient>
+          <linearGradient id="gGlass" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#4a5560"/>
+            <stop offset=".5" stop-color="#1b2128"/>
+            <stop offset="1" stop-color="#0b0e12"/>
+          </linearGradient>
+          <linearGradient id="gGlassHi" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#fff" stop-opacity=".22"/>
+            <stop offset=".45" stop-color="#fff" stop-opacity="0"/>
+          </linearGradient>
+          <radialGradient id="gRim" cx=".4" cy=".35" r=".8">
+            <stop offset="0" stop-color="#f4f6f8"/>
+            <stop offset=".55" stop-color="#a9b0b8"/>
+            <stop offset="1" stop-color="#5d646c"/>
+          </radialGradient>
+          <linearGradient id="gHead" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#9aa3ad"/>
+            <stop offset="1" stop-color="#eef3f7"/>
+          </linearGradient>
+          <linearGradient id="gTail" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#ff2a2a"/>
+            <stop offset="1" stop-color="#7a0a0a"/>
+          </linearGradient>
+          <linearGradient id="gBeam" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#fff8e6" stop-opacity=".75"/>
+            <stop offset="1" stop-color="#fff8e6" stop-opacity="0"/>
+          </linearGradient>
+          <radialGradient id="gShadow" cx=".5" cy=".5" r=".5">
+            <stop offset="0" stop-color="#000" stop-opacity=".75"/>
+            <stop offset="1" stop-color="#000" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="gTailGlow" cx=".5" cy=".5" r=".5">
+            <stop offset="0" stop-color="#ff2020" stop-opacity=".85"/>
+            <stop offset="1" stop-color="#ff2020" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="gHeadGlow" cx=".5" cy=".5" r=".5">
+            <stop offset="0" stop-color="#fffbe8" stop-opacity="1"/>
+            <stop offset="1" stop-color="#fffbe8" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="gSheen" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+            <stop offset=".5" stop-color="#fff" stop-opacity=".35"/>
+            <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="gReflFade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fff" stop-opacity=".28"/>
+            <stop offset=".6" stop-color="#fff" stop-opacity="0"/>
+          </linearGradient>
+          <mask id="mRefl" maskUnits="userSpaceOnUse" x="-100" y="355" width="1300" height="115">
+            <rect x="-100" y="355" width="1300" height="115" fill="url(#gReflFade)"/>
+          </mask>
+          <linearGradient id="gRoad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset=".2" class="acc-stop" stop-opacity="0"/>
+            <stop offset=".4" class="acc-stop" stop-opacity="1"/>
+            <stop offset=".6" class="acc-stop" stop-opacity="1"/>
+            <stop offset=".8" class="acc-stop" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="gRoadFaint" x1="0" y1="0" x2="1" y2="0">
+            <stop offset=".25" class="road-stop" stop-opacity="0"/>
+            <stop offset=".5" class="road-stop" stop-opacity="1"/>
+            <stop offset=".75" class="road-stop" stop-opacity="0"/>
+          </linearGradient>
+          <path id="pBody" d="M140 322 C124 320 116 306 116 290 L118 240 C118 230 121 222 126 216 L134 128 C137 104 146 88 162 78 C178 68 200 64 228 62 C330 56 450 54 520 58 C548 60 563 66 578 79 L664 150 C672 157 682 161 698 164 C760 172 806 180 836 192 C862 202 878 216 884 236 C889 252 890 272 889 294 C888 312 880 322 864 322 L792 322 A70 70 0 1 0 660 322 L318 322 A70 70 0 1 0 186 322 Z"/>
+          <clipPath id="cBody"><use href="#pBody"/></clipPath>
+          <!-- wheel -->
+          <g id="wheelTire">
+            <circle r="56" fill="#0d0e10"/>
+            <circle r="54" fill="none" stroke="#24272b" stroke-width="3"/>
+            <circle r="40" fill="#1a1c1f"/>
+          </g>
+          <g id="wheelRim">
+            <circle r="39" fill="url(#gRim)"/>
+            <g fill="#2a2e33">
+              <path d="M-5 -34 L5 -34 L4 -10 L-4 -10Z"/>
+              <path d="M-5 -34 L5 -34 L4 -10 L-4 -10Z" transform="rotate(72)"/>
+              <path d="M-5 -34 L5 -34 L4 -10 L-4 -10Z" transform="rotate(144)"/>
+              <path d="M-5 -34 L5 -34 L4 -10 L-4 -10Z" transform="rotate(216)"/>
+              <path d="M-5 -34 L5 -34 L4 -10 L-4 -10Z" transform="rotate(288)"/>
+            </g>
+            <circle r="35" fill="none" stroke="#e8ecef" stroke-opacity=".5" stroke-width="1.5"/>
+            <circle r="10" fill="#cfd5db" stroke="#5d646c" stroke-width="2"/>
+            <circle r="4" fill="#3a3f45"/>
+          </g>
+        </defs>
+
+        <!-- head beam -->
+        <path class="beam" d="M880 212 L1160 150 L1160 310 L880 232 Z" fill="url(#gBeam)"/>
+        <!-- ground shadow -->
+        <ellipse cx="503" cy="356" rx="430" ry="16" fill="url(#gShadow)"/>
+        <!-- reflection -->
+        <g class="reflection" mask="url(#mRefl)">
+          <g transform="translate(0 710) scale(1 -1)"><use href="#carBody"/></g>
+        </g>
+        <!-- road -->
+        <rect class="road-glow" x="-500" y="349" width="2100" height="14" fill="url(#gRoad)" opacity=".35"/>
+        <rect x="-500" y="354" width="2100" height="3" fill="url(#gRoad)"/>
+        <line id="roadDash" x1="-500" y1="384" x2="1600" y2="384" stroke="url(#gRoadFaint)" stroke-width="4" stroke-dasharray="70 90"/>
+
+        <g id="carBody">
+          <g id="carShell">
+            <!-- roof rails -->
+            <rect x="200" y="50" width="322" height="7" rx="3.5" fill="#17191d" stroke="#8a9099" stroke-opacity=".45"/>
+            <rect x="212" y="54" width="16" height="10" rx="2" fill="#17191d"/>
+            <rect x="496" y="53" width="16" height="10" rx="2" fill="#17191d"/>
+            <!-- body -->
+            <use href="#pBody" class="paint"/>
+            <use href="#pBody" fill="url(#gBodyShade)"/>
+            <!-- wheel wells -->
+            <path d="M792 322 A70 70 0 1 0 660 322 Z" fill="#050506"/>
+            <path d="M318 322 A70 70 0 1 0 186 322 Z" fill="#050506"/>
+            <!-- sheen sweep -->
+            <g clip-path="url(#cBody)"><rect class="sheen" x="-200" y="40" width="160" height="300" fill="url(#gSheen)"/></g>
+            <!-- greenhouse -->
+            <path id="pGlass" d="M150 151 L158 108 C162 92 176 82 200 80 C300 75 430 73 514 73 C536 73 549 78 559 88 L640 158 Z" fill="url(#gGlass)" stroke="#07080a" stroke-width="3"/>
+            <use href="#pGlass" fill="url(#gGlassHi)" stroke="none"/>
+            <!-- pillars -->
+            <path d="M240 79 L272 77 L266 155 L230 154 Z" class="paint"/>
+            <path d="M240 79 L272 77 L266 155 L230 154 Z" fill="#000" opacity=".12"/>
+            <path d="M408 74 L424 74 L422 157 L406 157 Z" fill="#0b0c0e"/>
+            <path d="M554 83 L638 157" stroke="#0b0c0e" stroke-width="7" stroke-linecap="round"/>
+            <!-- rear spoiler -->
+            <path d="M152 84 L214 68 L216 75 L158 92 Z" fill="#141518"/>
+            <!-- door seams -->
+            <g fill="none" stroke="#000" stroke-opacity=".38" stroke-width="2">
+              <path d="M423 159 L425 306"/>
+              <path d="M640 160 L650 236 C653 262 650 290 644 316"/>
+              <path d="M268 157 L272 214 Q314 226 330 266 L332 305"/>
+              <path d="M332 306 L644 308"/>
+              <path d="M133 146 L196 142"/>
+            </g>
+            <!-- shoulder & lower crease -->
+            <path d="M140 178 C380 182 620 188 840 200" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2"/>
+            <path d="M140 232 C380 234 620 238 886 250" fill="none" stroke="#000" stroke-opacity=".18" stroke-width="2"/>
+            <!-- side protection moulding -->
+            <path d="M326 262 L652 266 L652 278 L326 274 Z" fill="#17191d"/>
+            <!-- door handles -->
+            <rect x="352" y="180" width="34" height="7" rx="3.5" fill="#000" opacity=".35"/>
+            <rect x="566" y="184" width="34" height="7" rx="3.5" fill="#000" opacity=".35"/>
+            <!-- fuel cap -->
+            <circle cx="204" cy="200" r="13" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="2"/>
+            <!-- mirror -->
+            <path d="M624 150 L650 144 C660 144 662 160 655 166 L628 168 Z" fill="#141518"/>
+            <!-- lower cladding & arch flares (HR52S signature) -->
+            <g fill="#1a1c20">
+              <path d="M318 302 L660 304 L662 322 L318 322 Z"/>
+              <path d="M792 304 L889 296 L889 300 C888 314 880 322 864 322 L792 322 Z"/>
+              <path d="M116 292 L186 300 L186 322 L140 322 C124 320 117 308 116 292 Z"/>
+            </g>
+            <g fill="none" stroke="#1a1c20" stroke-width="9">
+              <path d="M796 322 A74 74 0 1 0 656 322"/>
+              <path d="M322 322 A74 74 0 1 0 182 322"/>
+            </g>
+            <!-- tail lamp -->
+            <path class="tail" d="M124 132 L139 128 L137 210 L122 212 Z" fill="url(#gTail)"/>
+            <path class="brake" d="M124 132 L139 128 L137 210 L122 212 Z" fill="#ff3b3b"/>
+            <!-- head lamp -->
+            <path d="M824 190 L866 200 C876 208 882 218 884 230 L846 224 C834 214 828 203 824 190 Z" fill="url(#gHead)" stroke="#2a2d31" stroke-width="2"/>
+            <circle class="hl-bulb" cx="860" cy="213" r="6.5" fill="#fff"/>
+            <!-- indicator, fog lamp, grille -->
+            <ellipse cx="690" cy="202" rx="9" ry="3.5" fill="#ffb02e" opacity=".85"/>
+            <rect x="858" y="280" width="22" height="9" rx="4" fill="#cfd5db" opacity=".8"/>
+            <path d="M884 240 L890 240 L890 268 L887 268 Z" fill="#111"/>
+          </g>
+          <!-- glows -->
+          <ellipse class="tail-glow" cx="126" cy="170" rx="40" ry="62" fill="url(#gTailGlow)"/>
+          <ellipse class="head-glow" cx="866" cy="213" rx="46" ry="30" fill="url(#gHeadGlow)"/>
+          <!-- wheels -->
+          <g transform="translate(252 299)"><use href="#wheelTire"/><g class="rim" id="rimR"><use href="#wheelRim"/></g></g>
+          <g transform="translate(726 299)"><use href="#wheelTire"/><g class="rim" id="rimF"><use href="#wheelRim"/></g></g>
+        </g>
+      </svg>
+      <div class="car-caption"><b>Chevrolet Cruze</b><span>HR52S · M13A 1.3L</span></div>
+      <button class="car-hint" id="carHint"><i data-icon="color"></i><span id="carColorName">Silver</span></button>
+    </section>
+
+    <!-- Vehicle / OBD -->
+    <section class="card vehicle-card" id="vehicleCard">
+      <div class="card-head"><span class="label">Vehicle</span><span class="tag" id="obdTag">OBD off</span></div>
+      <div class="v-grid">
+        <div class="v-item"><i data-icon="thermo"></i><div><b id="vCool">--</b><span>Coolant °C</span></div></div>
+        <div class="v-item"><i data-icon="battery"></i><div><b id="vVolt">--</b><span>Battery V</span></div></div>
+        <div class="v-item"><i data-icon="fuel"></i><div><b id="vFuel">--</b><span>Fuel %</span></div></div>
+        <div class="v-item"><i data-icon="gauge"></i><div><b id="vLoad">--</b><span>Load %</span></div></div>
+      </div>
+      <div class="v-health ok" id="vHealth"><i data-icon="check"></i><span id="vHealthTxt">No issues found</span></div>
+      <div class="v-service"><i data-icon="wrench"></i><span id="vService">Service in 5,000 km</span></div>
+    </section>
+  </main>
+
+  <!-- ───────── Dock ───────── -->
+  <nav class="dock card" id="dock">
+    <button data-act="nav"><i data-icon="nav"></i><span>Navigation</span></button>
+    <button data-act="music"><i data-icon="music"></i><span>Music</span></button>
+    <button data-act="video"><i data-icon="video"></i><span>Video</span></button>
+    <button data-act="phone"><i data-icon="phone"></i><span>Phone</span></button>
+    <button data-act="radio"><i data-icon="radio"></i><span>Radio</span></button>
+    <button data-act="obd"><i data-icon="engine"></i><span>Diagnostics</span></button>
+    <button data-act="connect"><i data-icon="globe"></i><span>Connectivity</span></button>
+    <button data-act="settings"><i data-icon="settings"></i><span>Settings</span></button>
+    <button data-act="apps"><i data-icon="apps"></i><span>Apps</span></button>
+  </nav>
+</div>
+
+<!-- ───────── Sheets ───────── -->
+<div class="scrim" id="scrim"></div>
+
+<section class="sheet" id="sheet-radio">
+  <header class="sheet-head"><h2><i data-icon="radio"></i>Live Radio</h2>
+    <div class="seg" id="radioTabs"><button data-tab="local" class="on">Sri Lanka</button><button data-tab="top">Top</button><button data-tab="fav">Favorites</button></div>
+    <button class="icon-btn" data-close aria-label="Close"><i data-icon="close"></i></button></header>
+  <div class="search"><i data-icon="search"></i><input id="radioSearch" placeholder="Search stations, genres…" autocomplete="off"></div>
+  <div class="list" id="radioList"></div>
+</section>
+
+<section class="sheet" id="sheet-apps">
+  <header class="sheet-head"><h2><i data-icon="apps"></i>Apps</h2>
+    <div class="search inline"><i data-icon="search"></i><input id="appSearch" placeholder="Search apps" autocomplete="off"></div>
+    <button class="icon-btn" data-close aria-label="Close"><i data-icon="close"></i></button></header>
+  <div class="apps-grid" id="appsGrid"></div>
+</section>
+
+<section class="sheet" id="sheet-obd">
+  <header class="sheet-head"><h2><i data-icon="engine"></i>Diagnostics · OBD-II</h2>
+    <span class="tag" id="obdState">Not connected</span>
+    <button class="icon-btn" data-close aria-label="Close"><i data-icon="close"></i></button></header>
+  <div class="obd-body">
+    <div class="obd-conn">
+      <select id="obdDev"><option value="">Select paired ELM327 adapter…</option></select>
+      <button class="btn" id="obdRefresh">Refresh</button>
+      <button class="btn primary" id="obdConnect">Connect</button>
+    </div>
+    <div class="obd-tiles" id="obdTiles"></div>
+    <div class="dtc">
+      <div class="dtc-head"><h3>Trouble codes</h3>
+        <button class="btn" id="dtcScan">Scan now</button>
+        <button class="btn danger" id="dtcClear">Clear codes</button></div>
+      <div class="list" id="dtcList"><div class="empty">Connect an adapter and tap “Scan now”.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sheet" id="sheet-settings">
+  <header class="sheet-head"><h2><i data-icon="settings"></i>Launcher settings</h2>
+    <button class="icon-btn" data-close aria-label="Close"><i data-icon="close"></i></button></header>
+  <div class="settings">
+    <div class="set-group">
+      <h3>Car colour</h3>
+      <div class="swatches" id="swatches"></div>
+      <h3>Appearance</h3>
+      <div class="row"><span>Theme</span><div class="seg" id="setTheme"><button data-v="auto">Auto</button><button data-v="day">Light</button><button data-v="night">Dark</button></div></div>
+      <div class="row"><span>Headlight detection</span><div class="seg" id="setLights"><button data-v="auto">Auto</button><button data-v="sun">Sunset</button><button data-v="off">Off</button></div></div>
+      <div class="row"><span>Performance</span><div class="seg" id="setPerf"><button data-v="auto">Auto</button><button data-v="full">Glass</button><button data-v="lite">Lite</button></div></div>
+      <div class="row"><span>24-hour clock</span><label class="sw"><input type="checkbox" id="set24"><i></i></label></div>
+    </div>
+    <div class="set-group">
+      <h3>Driving</h3>
+      <div class="row"><span>Units</span><div class="seg" id="setUnits"><button data-v="kmh">km/h</button><button data-v="mph">mph</button></div></div>
+      <div class="row"><span>Speed limit alert</span><label class="sw"><input type="checkbox" id="setLimitOn"><i></i></label></div>
+      <div class="row"><span>Limit <b id="limitVal">100</b></span><input type="range" id="setLimit" min="40" max="160" step="5"></div>
+      <div class="row"><span>Service interval (km)</span><input type="number" id="setService" min="1000" max="20000" step="500"></div>
+      <div class="row"><span>Service counter</span><button class="btn" id="btnServiceReset">Mark serviced</button></div>
+      <div class="row"><span>Trip</span><button class="btn" id="btnTripReset">Reset trip</button></div>
+      <div class="row"><span>Demo driving (preview)</span><label class="sw"><input type="checkbox" id="setDemo"><i></i></label></div>
+    </div>
+    <div class="set-group">
+      <h3>Weather location</h3>
+      <div class="row"><span>Use GPS location</span><label class="sw"><input type="checkbox" id="setGpsWx"><i></i></label></div>
+      <div class="search"><i data-icon="search"></i><input id="citySearch" placeholder="Search city (e.g. Kandy)" autocomplete="off"></div>
+      <div class="list compact" id="cityList"></div>
+      <h3>Default apps</h3>
+      <div class="row"><span>Navigation</span><select id="setNavPkg" data-kind="nav"></select></div>
+      <div class="row"><span>Music</span><select id="setMusicPkg" data-kind="music"></select></div>
+      <div class="row"><span>Video</span><select id="setVideoPkg" data-kind="video"></select></div>
+      <h3>System</h3>
+      <div class="row wrap">
+        <button class="btn" data-sys="notif">Allow media access</button>
+        <button class="btn" data-sys="home">Set as home</button>
+        <button class="btn" data-sys="system">Android settings</button>
+      </div>
+      <p class="about">Cruze Launcher · built for Chevrolet Cruze HR52S (2001–2008) · v<span id="ver">1.0</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="sheet small" id="sheet-quick">
+  <header class="sheet-head"><h2><i data-icon="sliders"></i>Quick controls</h2>
+    <button class="icon-btn" data-close aria-label="Close"><i data-icon="close"></i></button></header>
+  <div class="quick">
+    <div class="q-row"><i data-icon="volume"></i><input type="range" id="qVol" min="0" max="100"></div>
+    <div class="q-row"><i data-icon="sun"></i><input type="range" id="qBright" min="5" max="100"></div>
+    <div class="q-tiles">
+      <button data-q="bt"><i data-icon="bt"></i><span>Bluetooth</span></button>
+      <button data-q="wifi"><i data-icon="wifi"></i><span>Wi-Fi</span></button>
+      <button data-q="lights"><i data-icon="light"></i><span id="qLightsTxt">Lights: auto</span></button>
+      <button data-q="hotspot"><i data-icon="globe"></i><span>Hotspot</span></button>
+    </div>
+  </div>
+</section>
+
+<section class="sheet small" id="sheet-connect">
+  <header class="sheet-head"><h2><i data-icon="globe"></i>Connectivity</h2>
+    <button class="icon-btn" data-close aria-label="Close"><i data-icon="close"></i></button></header>
+  <div class="quick">
+    <div class="q-tiles">
+      <button data-q="bt"><i data-icon="bt"></i><span>Bluetooth</span></button>
+      <button data-q="wifi"><i data-icon="wifi"></i><span>Wi-Fi</span></button>
+      <button data-q="hotspot"><i data-icon="globe"></i><span>Hotspot</span></button>
+      <button data-q="obd"><i data-icon="obd"></i><span>OBD adapter</span></button>
+    </div>
+    <p class="about" id="connInfo"></p>
+  </div>
+</section>
+
+<div class="alert-banner" id="alertBanner"><i data-icon="alert"></i><span id="alertTxt"></span><button class="icon-btn" id="alertClose"><i data-icon="close"></i></button></div>
+<div class="toast" id="toast"></div>
+<audio id="radioAudio" preload="none"></audio>
+
+<script src="js/icons.js"></script>
+<script src="js/dtc.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
